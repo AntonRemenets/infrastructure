@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  userId     Int      @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   email      String   @unique
   password   String
   role       String   @default("USER")
@@ -28,7 +28,7 @@ model Token {
   id           Int    @id
   refreshToken String @unique @map("refresh_token")
 
-  user   User @relation(fields: [userId], references: [userId])
+  user   User @relation(fields: [userId], references: [id])
   userId Int  @unique
 
   @@map("user_token")

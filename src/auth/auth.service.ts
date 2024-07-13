@@ -9,7 +9,11 @@ import { Role, UserModel } from './models/user.model'
 import * as bcrypt from 'bcrypt'
 import { compareSync } from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { TokenModel } from './models/token.model'
+import { TokensModel } from './models/token.model'
+import { AuthLoginDto } from './dto/auth.dto'
+import { v4 } from 'uuid'
+import { add } from 'date-fns'
+import { Token } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -18,8 +22,8 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  // Registration
-  async newUser(dto: RegisterUserDto): Promise<TokenModel> {
+  // REGISTRATION
+  async newUser(dto: RegisterUserDto): Promise<TokensModel> {
     const candidate: UserModel = await this.prisma.user.findFirst({
       where: {
         email: dto.email,
@@ -39,8 +43,8 @@ export class AuthService {
     return this.generateTokens(newUser)
   }
 
-  // Authorization
-  async login(dto: RegisterUserDto): Promise<TokenModel> {
+  // AUTHORIZATION
+  async loginWithCredentials(dto: AuthLoginDto): Promise<TokensModel> {
     const user: UserModel = await this.prisma.user.findFirst({
       where: { email: dto.email },
     })
@@ -51,12 +55,16 @@ export class AuthService {
     return this.generateTokens(user)
   }
 
+  async loginWithAccessToken() {}
+
+  // CRYPT
   private async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt()
     return await bcrypt.hash(password, salt)
   }
 
-  private async generateTokens(user: UserModel): Promise<TokenModel> {
+  // TOKENS
+  private async generateTokens(user: UserModel): Promise<TokensModel> {
     const accessToken: string =
       'Bearer ' +
       this.jwt.sign({
@@ -64,7 +72,32 @@ export class AuthService {
         email: user.email,
         role: user.role,
       })
+    const refreshToken: Token = await this.getRefreshToken(user.id)
+    return { accessToken, refreshToken }
+  }
 
-    return { accessToken }
+  private async getRefreshToken(userId: number) {
+    const token = await this.prisma.token.findFirst({
+      where: {
+        userId,
+      },
+    })
+    if (!token) {
+      return this.prisma.token.create({
+        data: {
+          refreshToken: v4(),
+          exp: add(new Date(), { months: 1 }),
+          userId,
+        },
+      })
+    } else {
+      return this.prisma.token.update({
+        where: { refreshToken: token.refreshToken },
+        data: {
+          refreshToken: v4(),
+          exp: add(new Date(), { months: 1 }),
+        },
+      })
+    }
   }
 }

@@ -25,8 +25,8 @@ model User {
 }
 
 model Token {
-  id           Int    @id
-  refreshToken String @unique @map("refresh_token")
+  refreshToken String   @id @map("refresh_token")
+  exp          DateTime @map("expiration")
 
   user   User @relation(fields: [userId], references: [id])
   userId Int  @unique

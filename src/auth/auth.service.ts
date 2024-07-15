@@ -64,6 +64,7 @@ export class AuthService {
   }
 
   // TOKENS
+  // Generate
   private async generateTokens(user: UserModel): Promise<TokensModel> {
     const accessToken: string =
       'Bearer ' +
@@ -76,8 +77,9 @@ export class AuthService {
     return { accessToken, refreshToken }
   }
 
-  private async getRefreshToken(userId: number) {
-    const token = await this.prisma.token.findFirst({
+  // Get Refresh Token
+  private async getRefreshToken(userId: number): Promise<Token> {
+    const token: Token = await this.prisma.token.findFirst({
       where: {
         userId,
       },
@@ -99,5 +101,20 @@ export class AuthService {
         },
       })
     }
+  }
+
+  // Refresh Tokens
+  async refreshTokens(refreshToken: Token): Promise<TokensModel> {
+    const token: Token = await this.prisma.token.delete({
+      where: { refreshToken: refreshToken.refreshToken },
+    })
+    if (!token || new Date(token.exp) < new Date()) {
+      throw new UnauthorizedException()
+    }
+    const user: UserModel = await this.prisma.user.findFirst({
+      where: { id: token.userId },
+    })
+
+    return this.generateTokens(user)
   }
 }

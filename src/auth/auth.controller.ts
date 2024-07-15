@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
+  Req,
   Res,
   UnauthorizedException,
   UsePipes,
@@ -12,7 +14,7 @@ import { RegisterUserDto } from './dto/register-user.dto'
 import { ValidationPipe } from './pipes/validation.pipe'
 import { TokensModel } from './models/token.model'
 import { AuthLoginDto } from './dto/auth.dto'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 @Controller('auth')
 @UsePipes(new ValidationPipe())
@@ -35,8 +37,21 @@ export class AuthController {
     this.setTokensToCookies(tokens, res)
   }
 
-  refreshTokens() {}
+  @Get('refresh-tokens')
+  async refreshTokens(
+    @Req() req: Request,
+    //@Cookie('refreshtoken') refreshToken: string,
+    @Res() res: Response,
+  ) {
+    const refreshToken = req.cookies['refreshtoken']
+    if (!refreshToken) {
+      throw new UnauthorizedException()
+    }
+    const tokens: TokensModel = await this.auth.refreshTokens(refreshToken)
+    this.setTokensToCookies(tokens, res)
+  }
 
+  // Cookies
   private setTokensToCookies(tokens: TokensModel, res: Response) {
     if (!tokens) {
       throw new UnauthorizedException()

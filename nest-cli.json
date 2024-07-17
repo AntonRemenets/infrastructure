@@ -27,6 +27,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
+    },
+    "currencies": {
+      "type": "application",
+      "root": "apps/currencies",
+      "entryFile": "main",
+      "sourceRoot": "apps/currencies/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/currencies/tsconfig.app.json"
+      }
     }
   }
 }

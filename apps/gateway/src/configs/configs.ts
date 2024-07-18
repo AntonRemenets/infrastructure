@@ -1,6 +1,7 @@
-export const configModule = {
-  isGlobal: true,
-}
+// export const configModule: ConfigModuleOptions = {
+//   isGlobal: true,
+//   envFilePath: './.env',
+// }
 
 export const jwtConfig = {
   secret: process.env.JWT_SECRET,

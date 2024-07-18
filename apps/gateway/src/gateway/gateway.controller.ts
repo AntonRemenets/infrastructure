@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common'
+import { Controller, Get, Inject } from '@nestjs/common'
+import { ClientProxy } from '@nestjs/microservices'
 
 @Controller('api')
-export class GatewayController {}
+export class GatewayController {
+  constructor(@Inject('CURRENCY') private currencyService: ClientProxy) {}
+
+  @Get('test')
+  async getUser() {
+    return this.currencyService.send({ cmd: 'test' }, {})
+  }
+}

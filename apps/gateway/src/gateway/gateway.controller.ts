@@ -5,8 +5,8 @@ import { ClientProxy } from '@nestjs/microservices'
 export class GatewayController {
   constructor(@Inject('CURRENCY') private currencyService: ClientProxy) {}
 
-  @Get('test')
-  async getUser() {
-    return this.currencyService.send({ cmd: 'test' }, { payload: 'my payload' })
+  @Get('rates')
+  async getRates() {
+    return this.currencyService.send({ cmd: 'get-rates' }, {})
   }
 }

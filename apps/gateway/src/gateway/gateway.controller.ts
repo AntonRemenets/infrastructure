@@ -7,6 +7,6 @@ export class GatewayController {
 
   @Get('test')
   async getUser() {
-    return this.currencyService.send({ cmd: 'test' }, {})
+    return this.currencyService.send({ cmd: 'test' }, { payload: 'my payload' })
   }
 }

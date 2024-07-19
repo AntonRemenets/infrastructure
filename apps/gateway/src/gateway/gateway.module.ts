@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { GatewayController } from './gateway.controller'
-import { ConfigService } from '@nestjs/config'
 import { ClientProxyFactory, Transport } from '@nestjs/microservices'
+import { ConfigService } from '@nestjs/config'
 
 @Module({
   controllers: [GatewayController],

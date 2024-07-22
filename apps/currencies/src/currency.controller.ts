@@ -6,12 +6,12 @@ import { CurrencyService } from './currency.service'
 export class CurrencyController {
   constructor(private currencyService: CurrencyService) {}
 
-  @MessagePattern({ cmd: 'get-rates' })
-  async test(@Ctx() ctx: RmqContext) {
+  @MessagePattern({ cmd: 'cbr_rates' })
+  async getCbrRates(@Ctx() ctx: RmqContext) {
     const channel = ctx.getChannelRef()
     const message = ctx.getMessage()
     channel.ack(message)
 
-    return this.currencyService.get()
+    return this.currencyService.getFromCbr()
   }
 }

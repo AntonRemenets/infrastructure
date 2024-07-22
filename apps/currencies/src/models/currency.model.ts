@@ -1,6 +1,18 @@
-export class CurrencyModel {
-  result: string
-  time_last_update_utc: string
-  base_code: string
-  conversion_rates: { RUB: number }
+export class CbrCurrencyModel {
+  _declaration: any
+  ValCurs: {
+    _attributes: { Date: string }
+    Valute: CbrUnit[]
+  }
+}
+
+export class CbrUnit {
+  _attributes: { ID: string }
+  CharCode: { _text: string }
+  Value: { _text: string }
+}
+
+export enum Units {
+  USD = 'R01235',
+  EURO = 'R01239',
 }

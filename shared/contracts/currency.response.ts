@@ -1,5 +1,5 @@
 export class CurrencyResponse {
-  result: string
-  last_update: string
-  rates: number
+  update: string
+  usd: string
+  euro: string
 }

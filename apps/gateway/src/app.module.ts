@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config'
 import { configModule } from '../../../shared/configs/configmodule.config'
 import { GatewayModule } from './gateway/gateway.module'
 
+// TODO: имплементировать авторизацию!
+
 @Module({
   imports: [ConfigModule.forRoot(configModule), AuthModule, GatewayModule],
   controllers: [],

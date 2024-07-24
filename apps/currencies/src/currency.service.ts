@@ -8,8 +8,6 @@ import { CurrencyResponse } from '../../../shared/contracts/currency.response'
 export class CurrencyService {
   constructor(private readonly httpService: HttpService) {}
 
-  // ОТЛОВИТЬ ОШИБКИ
-
   // Получение курса валют с cbr.ru
   async getFromCbr(): Promise<CurrencyResponse> {
     const cbr_url: string = process.env.CBR_URI + this.dateToString()

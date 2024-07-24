@@ -7,6 +7,6 @@ async function bootstrap() {
   const app = await NestFactory.create(CurrenciesModule)
   app.connectMicroservice<MicroserviceOptions>(rmqConfig)
 
-  app.startAllMicroservices()
+  await app.startAllMicroservices()
 }
 bootstrap()

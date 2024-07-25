@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
   UsePipes,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
@@ -15,14 +16,20 @@ import { ValidationPipe } from './pipes/validation.pipe'
 import { TokensModel } from './models/token.model'
 import { AuthLoginDto } from './dto/auth.dto'
 import { Request, Response } from 'express'
+import { Roles } from '../decorators/roles.decorator'
+import { Role } from './models/user.model'
+import { RolesGuard } from '../guards/roles.guard'
+import { AuthGuard } from '../guards/auth.guard'
 
 @Controller('auth')
 @UsePipes(new ValidationPipe())
 export class AuthController {
   constructor(private auth: AuthService) {}
 
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
   @Post('register')
-  registerNewUser(@Body() dto: RegisterUserDto): Promise<TokensModel> {
+  registerNewUser(@Body() dto: RegisterUserDto) {
     try {
       return this.auth.newUser(dto)
     } catch (error) {

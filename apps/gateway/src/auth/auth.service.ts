@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
 
   // REGISTRATION
-  async newUser(dto: RegisterUserDto): Promise<TokensModel> {
+  async newUser(dto: RegisterUserDto) {
     const candidate: UserModel = await this.prisma.user.findFirst({
       where: {
         email: dto.email,
@@ -32,7 +32,7 @@ export class AuthService {
     if (candidate) {
       throw new BadRequestException('Пользователь уже сужествует')
     }
-    const newUser: UserModel = await this.prisma.user.create({
+    await this.prisma.user.create({
       data: {
         email: dto.email,
         password: await this.hashPassword(dto.password),
@@ -40,7 +40,7 @@ export class AuthService {
       },
     })
 
-    return this.generateTokens(newUser)
+    return 'ok'
   }
 
   // AUTHORIZATION

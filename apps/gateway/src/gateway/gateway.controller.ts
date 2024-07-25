@@ -4,14 +4,17 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  UseGuards,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { firstValueFrom, timeout } from 'rxjs'
 import * as process from 'node:process'
 import { CurrencyResponse } from '../../../../shared/contracts/currency.response'
+import { AuthGuard } from '../guards/auth.guard'
 
 const DELAY = Number(process.env.MICROSERVICE_DELAY)
 
+@UseGuards(AuthGuard)
 @Controller('api')
 export class GatewayController {
   constructor(@Inject('CURRENCY') private currencyService: ClientProxy) {}

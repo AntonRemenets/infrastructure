@@ -7,12 +7,16 @@ meta {
 post {
   url: http://localhost:4000/auth/register
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJteUAxMTEucnUiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MjE4OTY0OTcsImV4cCI6MTcyMTk4Mjg5N30.IbXiiQ4pwxulXQsBhOZprOYQ2_6bBEL-ziHBDS4-Wyg
 }
 
 body:json {
   {
-    "email": "my@111.ru",
-    "password": "111"
+    "email": "test@test.ru",
+    "password": "test"
   }
 }

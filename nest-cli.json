@@ -36,6 +36,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/currencies/tsconfig.app.json"
       }
+    },
+    "weather": {
+      "type": "application",
+      "root": "apps/weather",
+      "entryFile": "main",
+      "sourceRoot": "apps/weather/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/weather/tsconfig.app.json"
+      }
     }
   }
 }

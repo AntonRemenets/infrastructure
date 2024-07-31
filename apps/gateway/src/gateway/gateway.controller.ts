@@ -17,13 +17,32 @@ const DELAY = Number(process.env.MICROSERVICE_DELAY)
 @UseGuards(AuthGuard)
 @Controller('api')
 export class GatewayController {
-  constructor(@Inject('CURRENCY') private currencyService: ClientProxy) {}
+  constructor(
+    @Inject('CURRENCY') private currencyService: ClientProxy,
+    @Inject('WEATHER') private weatherService: ClientProxy,
+  ) {}
 
   @Get('rates')
   async getRates(): Promise<CurrencyResponse> {
     try {
       return await firstValueFrom(
         this.currencyService.send({ cmd: 'rates' }, {}).pipe(timeout(DELAY)),
+      )
+    } catch (e) {
+      throw new HttpException(
+        'Unable to fetch data',
+        HttpStatus.SERVICE_UNAVAILABLE,
+      )
+    }
+  }
+
+  @Get('current-weather')
+  async getWeather() {
+    try {
+      return await firstValueFrom(
+        this.weatherService
+          .send({ cmd: 'current-weather' }, {})
+          .pipe(timeout(DELAY)),
       )
     } catch (e) {
       throw new HttpException(

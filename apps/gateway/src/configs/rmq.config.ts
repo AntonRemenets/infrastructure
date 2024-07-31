@@ -1,14 +1,25 @@
 import { ClientProviderOptions, Transport } from '@nestjs/microservices'
 
 const URL = process.env.RABBITMQ_URL
-const QUEUE = 'currency_queue'
 
-export const rmqConfig: ClientProviderOptions = {
+export const rmqConfigCurrency: ClientProviderOptions = {
   name: 'CURRENCY',
   transport: Transport.RMQ,
   options: {
     urls: [`${URL}`],
-    queue: QUEUE,
+    queue: 'currency_queue',
+    queueOptions: {
+      durable: false,
+    },
+  },
+}
+
+export const rmqConfigWeather: ClientProviderOptions = {
+  name: 'WEATHER',
+  transport: Transport.RMQ,
+  options: {
+    urls: [`${URL}`],
+    queue: 'weather_queue',
     queueOptions: {
       durable: false,
     },

@@ -11,9 +11,12 @@ export class CurrencyService {
   // Получение курса валют с cbr.ru
   async getFromCbr(): Promise<CurrencyResponse> {
     const cbr_url: string = process.env.CBR_URI + this.dateToString()
-    const { data } = await this.httpService.axiosRef.get(cbr_url)
-
-    return this.parseXml(data)
+    try {
+      const { data } = await this.httpService.axiosRef.get(cbr_url)
+      return this.parseXml(data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   private parseXml(data: any): CurrencyResponse {
@@ -47,7 +50,8 @@ export class CurrencyService {
       fullDate.getMonth() + 1 < 10
         ? '0' + (fullDate.getMonth() + 1)
         : fullDate.getMonth() + 1
-    const date = fullDate.getDate()
+    const date =
+      fullDate.getDate() < 10 ? '0' + fullDate.getDate() : fullDate.getDate()
 
     return date + '/' + month + '/' + year
   }

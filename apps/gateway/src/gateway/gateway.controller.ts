@@ -11,6 +11,7 @@ import { firstValueFrom, timeout } from 'rxjs'
 import * as process from 'node:process'
 import { CurrencyResponse } from '../../../../shared/contracts/currency.response'
 import { AuthGuard } from '../guards/auth.guard'
+import { WeatherResponse } from '../../../../shared/contracts/weather.response'
 
 const DELAY = Number(process.env.MICROSERVICE_DELAY)
 
@@ -37,7 +38,7 @@ export class GatewayController {
   }
 
   @Get('current-weather')
-  async getWeather() {
+  async getWeather(): Promise<WeatherResponse> {
     try {
       return await firstValueFrom(
         this.weatherService

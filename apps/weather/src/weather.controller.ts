@@ -1,14 +1,14 @@
 import { Controller } from '@nestjs/common'
 import { Ctx, MessagePattern, RmqContext } from '@nestjs/microservices'
 import { WeatherService } from './weather.service'
+import { WeatherResponse } from '../../../shared/contracts/weather.response'
 
 @Controller()
 export class WeatherController {
   constructor(private weatherService: WeatherService) {}
 
-  // TODO: remove ANY
   @MessagePattern({ cmd: 'current-weather' })
-  async getCurrentWeather(@Ctx() ctx: RmqContext): Promise<any> {
+  async getCurrentWeather(@Ctx() ctx: RmqContext): Promise<WeatherResponse> {
     const channel = ctx.getChannelRef()
     const message = ctx.getMessage()
     channel.ack(message)

@@ -1,0 +1,15 @@
+meta {
+  name: Get forecast
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:4000/api/forecast-weather
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ0ZXN0QHRlc3QucnUiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcyMjg2MTY4OCwiZXhwIjoxNzIyOTQ4MDg4fQ.dE0cD3KsZ79qi2OGr08wzw_Bu-0U59tiVMLG6jgrYRk
+}

@@ -38,11 +38,28 @@ export class GatewayController {
   }
 
   @Get('current-weather')
-  async getWeather(): Promise<WeatherResponse> {
+  async getCurrentWeather(): Promise<WeatherResponse> {
     try {
       return await firstValueFrom(
         this.weatherService
           .send({ cmd: 'current-weather' }, {})
+          .pipe(timeout(DELAY)),
+      )
+    } catch (e) {
+      throw new HttpException(
+        'Unable to fetch data',
+        HttpStatus.SERVICE_UNAVAILABLE,
+      )
+    }
+  }
+
+  // TODO: remove any
+  @Get('forecast-weather')
+  async getForecastWeather(): Promise<any> {
+    try {
+      return await firstValueFrom(
+        this.weatherService
+          .send({ cmd: 'forecast-weather' }, {})
           .pipe(timeout(DELAY)),
       )
     } catch (e) {

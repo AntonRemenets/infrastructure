@@ -3,14 +3,24 @@ interface IWeather {
   description: string
 }
 
-export class WeatherModel {
+interface ITemp {
+  temp: number
+}
+
+interface IForecast {
+  dt: number
+  main: ITemp
+  weather: IWeather[]
+  // Time of data forecasted, ISO, UTC
+  dt_text: string
+}
+
+export class WeatherCurrentModel {
   // Погода - общее
   weather: IWeather[]
 
   // Температура
-  main: {
-    temp: number
-  }
+  main: ITemp
 
   // Видимость
   visibility?: number
@@ -44,4 +54,12 @@ export class WeatherModel {
 
   // Город
   name: string
+}
+
+export class WeatherForecastModel {
+  list: IForecast[]
+  city: {
+    name: string
+    sunset: number
+  }
 }

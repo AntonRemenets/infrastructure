@@ -15,4 +15,13 @@ export class WeatherController {
 
     return this.weatherService.getCurrentWeather()
   }
+
+  @MessagePattern({ cmd: 'forecast-weather' })
+  async getForecastWeather(@Ctx() ctx: RmqContext) {
+    const channel = ctx.getChannelRef()
+    const message = ctx.getMessage()
+    channel.ack(message)
+
+    return this.weatherService.getForecastWeather()
+  }
 }

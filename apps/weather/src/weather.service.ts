@@ -6,6 +6,7 @@ import {
   WeatherCurrentModel,
   WeatherForecastModel,
 } from './models/weather.model'
+import { format, fromUnixTime, getDate } from 'date-fns'
 
 @Injectable()
 export class WeatherService {
@@ -35,7 +36,7 @@ export class WeatherService {
       const { data } =
         await this.httpService.axiosRef.get<WeatherForecastModel>(url)
 
-      return data
+      return this.getForecast(data)
     } catch (e) {
       console.log(e.code)
     }
@@ -48,6 +49,34 @@ export class WeatherService {
       return `https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid=${process.env.WEATHER_TOKEN}&lang=ru&units=metric`
     } else {
       return null
+    }
+  }
+
+  private getForecast(data: WeatherForecastModel) {
+    const weatherResult = []
+    for (const weather of data.list) {
+      const obj = {
+        timestamp: undefined,
+        temp: undefined,
+        description: undefined,
+      }
+      const hour: string = format(fromUnixTime(weather.dt), 'HH')
+      const date: number = Number(format(fromUnixTime(weather.dt), 'dd'))
+      const currentDate = getDate(new Date())
+
+      if (date < currentDate + 3) {
+        if (hour === '08' || hour === '14' || hour === '20') {
+          obj.timestamp = format(fromUnixTime(weather.dt), 'dd-MM HH:mm')
+          obj.temp = weather.main.temp
+          obj.description = weather.weather[0].description
+
+          weatherResult.push(obj)
+        }
+      }
+    }
+    return {
+      message: `Прогноз погоды в городе ${data.city.name}`,
+      result: weatherResult,
     }
   }
 }

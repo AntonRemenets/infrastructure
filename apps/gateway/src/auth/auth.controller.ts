@@ -18,8 +18,8 @@ import { AuthLoginDto } from './dto/auth.dto'
 import { Request, Response } from 'express'
 import { Roles } from '../decorators/roles.decorator'
 import { Role } from './models/user.model'
-import { RolesGuard } from '../guards/roles.guard'
 import { AuthGuard } from '../guards/auth.guard'
+import { RolesGuard } from '../guards/roles.guard'
 
 @Controller('auth')
 @UsePipes(new ValidationPipe())

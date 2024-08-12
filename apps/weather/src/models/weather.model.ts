@@ -10,6 +10,7 @@ interface ITemp {
 interface IForecast {
   dt: number
   main: ITemp
+  // Массив погоды
   weather: IWeather[]
   // Time of data forecasted, ISO, UTC
   dt_text: string

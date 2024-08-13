@@ -6,18 +6,14 @@ services:
       dockerfile: Dockerfile.gateway
     ports:
       - "4000:4000"
-    networks:
-      - dbs_network
     restart: unless-stopped
 
   infrastructure-currencies:
     build:
       dockerfile: Dockerfile.currencies
-    networks:
-      - dbs_network
     restart: unless-stopped
 
-networks:
-  dbs_network:
-    name: startdbs_default
-    external: true
+  infrastructure-weather:
+    build:
+      dockerfile: Dockerfile.weather
+    restart: unless-stopped

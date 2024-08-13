@@ -9,6 +9,7 @@
     "build": "nest build",
     "build:gateway": "nest build gateway",
     "build:currencies": "nest build currencies",
+    "build:weather": "nest build weather",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

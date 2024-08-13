@@ -1,3 +1,9 @@
+export interface IForecast {
+  timestamp: string
+  temp: number
+  description: string
+}
+
 export class WeatherResponse {
   city: string
   temp: number
@@ -5,4 +11,9 @@ export class WeatherResponse {
   description?: string
   sunrise?: string
   sunset?: string
+}
+
+export class WeatherForecastResponse {
+  message: string
+  result: IForecast[]
 }

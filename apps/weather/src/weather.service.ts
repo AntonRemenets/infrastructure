@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { NIZHNIY_TAGIL } from './locations'
-import { WeatherResponse } from '../../../shared/contracts/weather.response'
+import {
+  IForecast,
+  WeatherForecastResponse,
+  WeatherResponse,
+} from '../../../shared/contracts/weather.response'
 import {
   WeatherCurrentModel,
   WeatherForecastModel,
@@ -30,7 +34,7 @@ export class WeatherService {
     }
   }
 
-  async getForecastWeather() {
+  async getForecastWeather(): Promise<WeatherForecastResponse> {
     const url = this.getUrl('forecast', NIZHNIY_TAGIL.id)
     try {
       const { data } =
@@ -52,10 +56,10 @@ export class WeatherService {
     }
   }
 
-  private getForecast(data: WeatherForecastModel) {
+  private getForecast(data: WeatherForecastModel): WeatherForecastResponse {
     const weatherResult = []
     for (const weather of data.list) {
-      const obj = {
+      const obj: IForecast = {
         timestamp: undefined,
         temp: undefined,
         description: undefined,

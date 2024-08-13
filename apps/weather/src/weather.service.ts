@@ -79,7 +79,7 @@ export class WeatherService {
       }
     }
     return {
-      message: `Прогноз погоды в городе ${data.city.name}`,
+      city: data.city.name,
       result: weatherResult,
     }
   }

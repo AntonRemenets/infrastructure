@@ -14,6 +14,6 @@ export class WeatherResponse {
 }
 
 export class WeatherForecastResponse {
-  message: string
+  city: string
   result: IForecast[]
 }

@@ -4,6 +4,8 @@ import { Context } from 'telegraf'
 import { firstValueFrom, timeout } from 'rxjs'
 import { ClientProxy } from '@nestjs/microservices'
 import { ConfigService } from '@nestjs/config'
+import { CurrencyResponse } from '../../../shared/contracts/currency.response'
+import { WeatherForecastResponse } from '../../../shared/contracts/weather.response'
 
 @Update()
 @Injectable()
@@ -21,30 +23,43 @@ export class TelegramService {
     await ctx.reply('Welcome')
   }
 
-  @Hears('курсы')
+  @Hears('Курсы')
   async getCurrency(ctx: Context) {
     try {
-      const data = await firstValueFrom(
+      const data: CurrencyResponse = await firstValueFrom(
         this.currencyService
           .send({ cmd: 'rates' }, {})
           .pipe(timeout(this.DELAY)),
       )
-      await ctx.reply(JSON.stringify(data, null, 2))
+      //await ctx.reply(JSON.stringify(data, null, 2))
+      await ctx.reply(
+        `Курсы валют на ${data.update}:\nДоллар: ${data.usd},\nЕвро: ${data.euro}.`,
+      )
     } catch (e) {
       console.log(e)
       await ctx.reply('Unable to fetch data')
     }
   }
 
-  @Hears('прогноз')
+  // TODO: сделать красивый вывод
+  @Hears('Прогноз')
   async getForecast(ctx: Context) {
     try {
-      const data = await firstValueFrom(
+      const data: WeatherForecastResponse = await firstValueFrom(
         this.weatherService
           .send({ cmd: 'forecast-weather' }, {})
           .pipe(timeout(this.DELAY)),
       )
-      await ctx.reply(JSON.stringify(data, null, 2))
+      if (!data) {
+        await ctx.reply('Unable to fetch data')
+      }
+      let msg = ''
+      for (const item of data.result) {
+        msg =
+          msg +
+          `${item.timestamp} температура: ${Math.floor(item.temp)} ${item.description},\n`
+      }
+      await ctx.reply(`Погода в ${data.city}:\n` + msg)
     } catch (e) {
       console.log(e)
       await ctx.reply('Unable to fetch data')

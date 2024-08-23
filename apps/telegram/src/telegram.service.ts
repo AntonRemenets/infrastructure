@@ -20,49 +20,58 @@ export class TelegramService {
 
   @Start()
   async start(ctx: Context) {
-    await ctx.reply('Welcome')
+    if (this.userCheck(ctx.from.id)) {
+      await ctx.reply('Welcome')
+    }
   }
 
   @Hears('Курсы')
   async getCurrency(ctx: Context) {
-    try {
-      const data: CurrencyResponse = await firstValueFrom(
-        this.currencyService
-          .send({ cmd: 'rates' }, {})
-          .pipe(timeout(this.DELAY)),
-      )
-      //await ctx.reply(JSON.stringify(data, null, 2))
-      await ctx.reply(
-        `Курсы валют на ${data.update}:\nДоллар: ${data.usd},\nЕвро: ${data.euro}.`,
-      )
-    } catch (e) {
-      console.log(e)
-      await ctx.reply('Unable to fetch data')
+    if (this.userCheck(ctx.from.id)) {
+      try {
+        const data: CurrencyResponse = await firstValueFrom(
+          this.currencyService
+            .send({ cmd: 'rates' }, {})
+            .pipe(timeout(this.DELAY)),
+        )
+        //await ctx.reply(JSON.stringify(data, null, 2))
+        await ctx.reply(
+          `Курсы валют на ${data.update}:\nДоллар: ${data.usd},\nЕвро: ${data.euro}.`,
+        )
+      } catch (e) {
+        await ctx.reply('Unable to fetch data')
+      }
     }
   }
 
   // TODO: сделать красивый вывод
   @Hears('Прогноз')
   async getForecast(ctx: Context) {
-    try {
-      const data: WeatherForecastResponse = await firstValueFrom(
-        this.weatherService
-          .send({ cmd: 'forecast-weather' }, {})
-          .pipe(timeout(this.DELAY)),
-      )
-      if (!data) {
+    if (this.userCheck(ctx.from.id)) {
+      try {
+        const data: WeatherForecastResponse = await firstValueFrom(
+          this.weatherService
+            .send({ cmd: 'forecast-weather' }, {})
+            .pipe(timeout(this.DELAY)),
+        )
+        if (!data) {
+          await ctx.reply('Unable to fetch data')
+        }
+        let msg = ''
+        for (const item of data.result) {
+          msg =
+            msg +
+            `${item.timestamp} температура: ${Math.floor(item.temp)} ${item.description},\n`
+        }
+        await ctx.reply(`Погода в ${data.city}:\n` + msg)
+      } catch (e) {
         await ctx.reply('Unable to fetch data')
       }
-      let msg = ''
-      for (const item of data.result) {
-        msg =
-          msg +
-          `${item.timestamp} температура: ${Math.floor(item.temp)} ${item.description},\n`
-      }
-      await ctx.reply(`Погода в ${data.city}:\n` + msg)
-    } catch (e) {
-      console.log(e)
-      await ctx.reply('Unable to fetch data')
     }
+  }
+
+  userCheck(id: number): boolean {
+    const allowedUser = Number(this.config.get('ALLOWED_ID'))
+    return id === allowedUser
   }
 }
